@@ -1,0 +1,64 @@
+import pygame
+pygame.init()
+screenWidth,screenHeight = (400,300)
+window = pygame.display.set_mode((screenWidth,screenHeight))
+
+x,y = (100,100)
+width,height = (16,16)
+vel = 5
+
+
+walking = False
+walkcount = 0
+###
+
+walk = [pygame.image.load('elf_m_run_anim_f1.png'),pygame.image.load('elf_m_run_anim_f2.png'),pygame.image.load('elf_m_run_anim_f3.png')]
+bg = pygame.image.load('bg.png')
+char = pygame.image.load('elf_m_run_anim_f0.png')
+
+###
+clock = pygame.time.Clock()
+def redraw_gamewindow():
+    global walkcount
+    
+    window.blit(bg,(0,0))
+    if walkcount + 1 >= 9:
+        walkcount = 0
+    if walking:
+        window.blit(walk[walkcount//3], (x,y))
+        walkcount += 1
+    else:
+        window.blit(char, (x,y))
+    pygame.display.update() 
+
+###
+pygame.display.set_caption("First Game")
+run = True
+while run :
+    clock.tick(12)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    keys = pygame.key.get_pressed()
+    walking = False
+    if keys[pygame.K_a] and x > vel:
+        x-= vel
+        walking = True
+    if keys[pygame.K_d] and x < screenWidth - width:
+        x += vel
+        walking = True
+    if keys[pygame.K_w] and y > vel:
+        y -= vel
+        walking = True
+    if keys[pygame.K_s] and y < screenHeight - height:
+        y += vel
+        walking = True
+    '''else:
+        walking = False
+        walkcount = 0'''
+    
+    redraw_gamewindow()
+    
+pygame.quit()
